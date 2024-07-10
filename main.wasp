@@ -31,6 +31,11 @@ route DayAnalysisRoute { path: "/day-analysis", to: DayAnalysisPage }
 page DayAnalysisPage {
   component: import { DayAnalysis } from "@src/pages/day-analysis.tsx"
 }
+route MonthAnalysisRoute { path: "/month-analysis", to: MonthAnalysisPage }
+page MonthAnalysisPage {
+  component: import { MonthAnalysis } from "@src/pages/month-analysis.tsx"
+}
+
 
 
 entity User {=psl
