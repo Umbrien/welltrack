@@ -1,9 +1,7 @@
 import { useState, useMemo } from "react";
 import { AppLayout } from "../layout/AppLayout";
-import { Calendar } from "../components/ui/calendar";
 import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -18,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../components/ui/chart";
+import { Calendar } from "../components/ui/calendar";
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },

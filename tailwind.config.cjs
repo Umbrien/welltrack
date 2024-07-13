@@ -13,6 +13,9 @@ module.exports = {
     //     "2xl": "1400px",
     //   },
     // },
+    fontFamily: {
+      sans: ["Space Grotesk", "sans-serif"],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -21,11 +24,11 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#2EB5FA",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#D7F1FF",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
