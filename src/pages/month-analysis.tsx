@@ -1,7 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { AppLayout } from "../layout/AppLayout";
-import { TrendingUp } from "lucide-react";
-import { Label, Pie, PieChart } from "recharts";
 import {
   Card,
   CardContent,
@@ -11,134 +9,113 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "../components/ui/chart";
-import { Calendar } from "../components/ui/calendar";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-];
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { MeasureVariant } from "../types";
+import { physicalChartConfig, mentalChartConfig } from "../types";
 
 export function MonthAnalysis() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
   return (
     <AppLayout>
       <div className="flex flex-col gap-3">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-md border"
-        />
-        <ChartComponent />
-        <h2>Month analysis</h2>
-        <p className="text-lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        </p>
+        <ChartComponent variant="physical" />
+        <ChartComponent variant="mental" />
       </div>
     </AppLayout>
   );
 }
 
-export function ChartComponent() {
-  const totalVisitors = useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+const physicalChartData = [
+  { dayNumber: "1", meals: 6, physicalActivity: 8, hydration: 3 },
+  { dayNumber: "2", meals: 5, physicalActivity: 2, hydration: 5 },
+  { dayNumber: "3", meals: 7, physicalActivity: 1, hydration: 7 },
+  { dayNumber: "4", meals: 3, physicalActivity: 9, hydration: 4 },
+  { dayNumber: "5", meals: 9, physicalActivity: 3, hydration: 6 },
+  { dayNumber: "6", meals: 4, physicalActivity: 4, hydration: 8 },
+];
 
+const mentalChartData = [
+  { dayNumber: "1", mindfulness: 6, mood: 8, stress: 3 },
+  { dayNumber: "2", mindfulness: 5, mood: 2, stress: 5 },
+  { dayNumber: "3", mindfulness: 7, mood: 1, stress: 7 },
+  { dayNumber: "4", mindfulness: 3, mood: 9, stress: 4 },
+  { dayNumber: "5", mindfulness: 9, mood: 3, stress: 6 },
+  { dayNumber: "6", mindfulness: 4, mood: 4, stress: 8 },
+];
+
+export function ChartComponent({ variant }: { variant: MeasureVariant }) {
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+    <Card>
+      <CardHeader>
+        <CardTitle>{variant == "physical" ? "Physical" : "Mental"}</CardTitle>
+        <CardDescription>activity analytics</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
+      <CardContent>
         <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          config={
+            variant == "physical" ? physicalChartConfig : mentalChartConfig
+          }
         >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+          <LineChart
+            accessibilityLayer
+            data={variant == "physical" ? physicalChartData : mentalChartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="dayNumber"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
-              innerRadius={60}
-              strokeWidth={5}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Visitors
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Line
+              dataKey={variant == "physical" ? "meals" : "mindfulness"}
+              type="monotone"
+              stroke="hsl(var(--chart-3))"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              dataKey={variant == "physical" ? "physicalActivity" : "mood"}
+              type="monotone"
+              stroke="hsl(var(--chart-2))"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              dataKey={variant == "physical" ? "hydration" : "stress"}
+              type="monotone"
+              stroke="hsl(var(--chart-1))"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-3 w-full gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Average {variant == "physical" ? "meals" : "mindfulness"} score:
+              7.5
+            </div>
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Average {variant == "physical" ? "physical activity" : "mood"}{" "}
+              score: 8.5
+            </div>
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Average {variant == "physical" ? "hydration" : "stress"} score:
+              8.5
+            </div>
+          </div>
         </div>
       </CardFooter>
     </Card>

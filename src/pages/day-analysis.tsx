@@ -1,18 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { DatePicker } from "../components/ui/datepicker";
 import { AppLayout } from "../layout/AppLayout";
 import { Tabs, TabsContent } from "../components/ui/tabs";
 import { PhysicalMentalTabsList } from "../components/PhysicalMentalTabsList";
 import { LabelList, RadialBar, RadialBarChart } from "recharts";
-
+import { physicalChartConfig, mentalChartConfig } from "../types";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
 } from "../components/ui/chart";
+import { MeasureVariant } from "../types";
 const physicalChartData = [
   { measureIndicator: "hydration", value: 3, fill: "var(--color-hydration)" },
   {
@@ -36,42 +36,7 @@ const mentalChartData = [
   },
 ];
 
-const physicalChartConfig = {
-  value: {
-    label: "Value",
-  },
-  hydration: {
-    label: "Hydration",
-    color: "hsl(var(--chart-1))",
-  },
-  physicalActivity: {
-    label: "Physical activity",
-    color: "hsl(var(--chart-2))",
-  },
-  meals: {
-    label: "Meals",
-    color: "hsl(var(--chart-3))",
-  },
-} satisfies ChartConfig;
-const mentalChartConfig = {
-  value: {
-    label: "Value",
-  },
-  stress: {
-    label: "Stress",
-    color: "hsl(var(--chart-1))",
-  },
-  mood: {
-    label: "Mood",
-    color: "hsl(var(--chart-2))",
-  },
-  mindfulness: {
-    label: "Mindfulness",
-    color: "hsl(var(--chart-3))",
-  },
-} satisfies ChartConfig;
-
-function DayHalfAnalysis({ half }: { half: "physical" | "mental" }) {
+function DayHalfAnalysis({ half }: { half: MeasureVariant }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="h-72">
