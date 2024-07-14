@@ -10,6 +10,8 @@ function FullWaterCup({ onClick }: { onClick: () => void }) {
       viewBox="0 0 46 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      onClick={onClick}
+      className="cursor-pointer"
     >
       <path
         d="M1 1H45V48C45 54.0751 40.0751 59 34 59H12C5.92487 59 1 54.0751 1 48V1Z"
@@ -18,7 +20,7 @@ function FullWaterCup({ onClick }: { onClick: () => void }) {
       <path
         d="M1 1H45V48C45 54.0751 40.0751 59 34 59H12C5.92487 59 1 54.0751 1 48V1Z"
         stroke="#8ED8FE"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );
@@ -32,11 +34,13 @@ function AddWaterCup({ onClick }: { onClick: () => void }) {
       viewBox="0 0 46 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      onClick={onClick}
+      className="cursor-pointer"
     >
       <path
         d="M1 1H45V48C45 54.0751 40.0751 59 34 59H12C5.92487 59 1 54.0751 1 48V1Z"
         stroke="#E8E8E8"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <path
         d="M20.896 36.924V31.092H15.136V27.708H20.896V21.876H24.424V27.708H30.184V31.092H24.424V36.924H20.896Z"
@@ -46,7 +50,21 @@ function AddWaterCup({ onClick }: { onClick: () => void }) {
   );
 }
 
-export function Physical() {
+export function Physical({
+  ate,
+  setAte,
+  physicalActivity,
+  setPhysicalActivity,
+  hydration,
+  setHydration,
+}: {
+  ate: string;
+  setAte: (value: string) => void;
+  physicalActivity: string;
+  setPhysicalActivity: (value: string) => void;
+  hydration: number;
+  setHydration: (value: number) => void;
+}) {
   return (
     <>
       <div className="mb-4">
@@ -54,6 +72,8 @@ export function Physical() {
         <Textarea
           placeholder="Type your answer here..."
           className="w-full h-24"
+          value={ate}
+          onChange={(e) => setAte(e.target.value)}
         />
       </div>
       <div className="mb-4">
@@ -63,6 +83,8 @@ export function Physical() {
         <Textarea
           placeholder="Type your answer here..."
           className="w-full h-24"
+          value={physicalActivity}
+          onChange={(e) => setPhysicalActivity(e.target.value)}
         />
       </div>
       <div className="mb-4">
@@ -70,14 +92,15 @@ export function Physical() {
           How much water cups you've drank?
         </Label>
         <div className="flex flex-wrap gap-2">
-          <FullWaterCup onClick={() => {}} />
-          <AddWaterCup onClick={() => {}} />
+          {Array.from({ length: hydration }).map((_, i) => (
+            <FullWaterCup key={i} onClick={() => setHydration(hydration - 1)} />
+          ))}
+          <AddWaterCup
+            onClick={() => {
+              setHydration(hydration + 1);
+            }}
+          />
         </div>
-      </div>
-      <div className="flex justify-center gap-3">
-        <Button variant="default" className="w-1/3 rounded-full">
-          Next
-        </Button>
       </div>
     </>
   );

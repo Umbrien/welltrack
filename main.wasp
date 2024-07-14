@@ -17,8 +17,6 @@ app healthy {
   ]
 }
  
-// ...
-// 4. Define the routes
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
   component: import { Login } from "@src/pages/auth.tsx"
@@ -44,8 +42,37 @@ page MonthAnalysisPage {
   authRequired: true
 }
 
-
-
 entity User {=psl
     id                        Int           @id @default(autoincrement())
+    physicalActivityAnalyses  PhysicalActivityAnalysis[]
+    mentalActivityAnalyses    MentalActivityAnalysis[]
 psl=}
+
+entity PhysicalActivityAnalysis {=psl
+ id                        Int           @id @default(autoincrement())
+  userId                    Int
+  user                      User          @relation(fields: [userId], references: [id])
+  date                      DateTime
+  meals                     Int
+  physicalActivity          Int
+  hydration                 Int
+  advices                   String //serialized JSON
+  @@unique([userId, date])
+psl=}
+
+entity MentalActivityAnalysis {=psl
+ id                        Int           @id @default(autoincrement())
+  userId                    Int
+  user                      User          @relation(fields: [userId], references: [id])
+  date                      DateTime
+  mindfulness                     Int
+  mood          Int
+  stress                 Int
+  advices                   String //serialized JSON
+  @@unique([userId, date])
+psl=}
+
+action analyzeDayActivities {
+  fn: import { analyzeDayActivities } from "@src/actions/analyzeDayActivities.js",
+  entities: [PhysicalActivityAnalysis, MentalActivityAnalysis]
+}
