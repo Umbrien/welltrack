@@ -72,6 +72,11 @@ entity MentalActivityAnalysis {=psl
   @@unique([userId, date])
 psl=}
 
+query getDayAnalysis {
+  fn: import { getDayAnalysis } from "@src/queries/getDayAnalysis.js",
+  entities: [PhysicalActivityAnalysis, MentalActivityAnalysis]
+}
+
 action analyzeDayActivities {
   fn: import { analyzeDayActivities } from "@src/actions/analyzeDayActivities.js",
   entities: [PhysicalActivityAnalysis, MentalActivityAnalysis]
