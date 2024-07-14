@@ -21,7 +21,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <TableProperties size={24} color="white" />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>Week view</TooltipContent>
+              <TooltipContent>Day view</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger>
